@@ -18,14 +18,15 @@ export class BankingSynchronization {
 
   // Method to clean and check balances
   private checkBalances(balances: BankingBalance[]): BankingBalance[] {
-    const balanceMap = new Map<string, BankingBalance>();
-    balances.forEach((item) => balanceMap.set(item.id, item));
-    if (balanceMap.size < 2) {
-      throw new BankingSynchronizationValidationError(
-        'Not enough bank balances.',
-      );
+    const balanceMap = new Map<string, BankingBalance>(
+      balances.map((item) => [item.id, item]),
+    );
+    const orderedBalances = Array.from(balanceMap.values());
+    orderedBalances.sort(BankingBalance.OrderByDate);
+    if (orderedBalances.length < 2) {
+      throw new Error('Not enough bank balances.');
     }
-    return Object.values(balanceMap);
+    return orderedBalances;
   }
 
   // Method to check for duplicated movements
@@ -45,16 +46,9 @@ export class BankingSynchronization {
 
   // Method to validate banking synchronization by using control points
   validate(balances: BankingBalance[]): BankingSynchronizationWarning[] {
-    const checkedBalances = this.checkBalances(balances);
+    const orderedBalances = this.checkBalances(balances);
     let warnings = new Array<BankingSynchronizationWarning>();
     warnings = warnings.concat(this.checkDuplicatedMovements());
     return warnings;
-  }
-}
-
-export class BankingSynchronizationValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'BankingSynchronizationValidationError';
   }
 }

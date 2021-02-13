@@ -12,6 +12,10 @@ export class BankingBalance {
     this.balance = props.balance;
   }
 
+  static OrderByDate(balanceA: BankingBalance, balanceB: BankingBalance) {
+    return balanceA.date.getTime() - balanceB.date.getTime();
+  }
+
   get id(): string {
     return this.date.toUTCString();
   }

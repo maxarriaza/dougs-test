@@ -1,8 +1,5 @@
 import { BankingMovement } from './banking-movement';
-import {
-  BankingSynchronization,
-  BankingSynchronizationValidationError,
-} from './banking-synchronization';
+import { BankingSynchronization } from './banking-synchronization';
 import { BankingBalance } from './banking-balance';
 import { MovementDuplicationWarning } from './banking-synchronization-warning';
 
@@ -10,9 +7,7 @@ describe('BankingSynchronization', () => {
   describe('validate', () => {
     test('with no balance should raise an processing error', () => {
       const synchronization = new BankingSynchronization();
-      expect(() => synchronization.validate([])).toThrow(
-        BankingSynchronizationValidationError,
-      );
+      expect(() => synchronization.validate([])).toThrow(Error);
     });
 
     test('with one balance should raise a processing error', () => {
@@ -21,9 +16,7 @@ describe('BankingSynchronization', () => {
         date: new Date(Date.UTC(111, 1, 1, 0, 0, 0, 0)),
         balance: 0,
       });
-      expect(() => synchronization.validate([start_balance])).toThrow(
-        BankingSynchronizationValidationError,
-      );
+      expect(() => synchronization.validate([start_balance])).toThrow(Error);
     });
 
     test('with two duplicated balances should raise a processing error', () => {
@@ -34,7 +27,7 @@ describe('BankingSynchronization', () => {
       });
       expect(() =>
         synchronization.validate([start_balance, start_balance]),
-      ).toThrow(BankingSynchronizationValidationError);
+      ).toThrow(Error);
     });
 
     test('with duplicated movements should return duplicated movement warning', () => {
@@ -48,11 +41,11 @@ describe('BankingSynchronization', () => {
         movements: [movement, movement],
       });
       const start_balance = new BankingBalance({
-        date: new Date(Date.UTC(111, 1, 1, 0, 0, 0, 0)),
+        date: new Date(Date.UTC(2011, 0, 0, 0, 0, 0, 0)),
         balance: 0,
       });
       const end_balance = new BankingBalance({
-        date: new Date(Date.UTC(111, 1, 31, 23, 59, 59, 999)),
+        date: new Date(Date.UTC(2011, 0, 30, 23, 59, 59, 999)),
         balance: 10,
       });
       const warnings = synchronization.validate([start_balance, end_balance]);
