@@ -4,6 +4,7 @@ import {
   BankingSynchronizationValidationError,
 } from './banking-synchronization';
 import { BankingBalance } from './banking-balance';
+import { MovementDuplicationWarning } from './banking-synchronization-warning';
 
 describe('BankingSynchronization', () => {
   describe('validate', () => {
@@ -36,7 +37,7 @@ describe('BankingSynchronization', () => {
       ).toThrow(BankingSynchronizationValidationError);
     });
 
-    xtest('with duplicated movements should return error', () => {
+    test('with duplicated movements should return duplicated movement warning', () => {
       const movement = new BankingMovement({
         id: 1,
         amount: 10,
@@ -54,7 +55,8 @@ describe('BankingSynchronization', () => {
         date: new Date(Date.UTC(111, 1, 31, 23, 59, 59, 999)),
         balance: 10,
       });
-      synchronization.validate([start_balance, end_balance]);
+      const warnings = synchronization.validate([start_balance, end_balance]);
+      expect(warnings).toContainEqual(new MovementDuplicationWarning(movement));
     });
   });
 });

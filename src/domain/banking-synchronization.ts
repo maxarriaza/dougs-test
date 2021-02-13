@@ -1,5 +1,9 @@
 import { BankingMovement } from './banking-movement';
 import { BankingBalance } from './banking-balance';
+import {
+  BankingSynchronizationWarning,
+  MovementDuplicationWarning,
+} from './banking-synchronization-warning';
 
 interface BankingSynchronizationProps {
   movements: BankingMovement[];
@@ -24,10 +28,27 @@ export class BankingSynchronization {
     return Object.values(balanceMap);
   }
 
+  // Method to check for duplicated movements
+  private checkDuplicatedMovements(): BankingSynchronizationWarning[] {
+    const warnings = new Array<BankingSynchronizationWarning>();
+    const movementsMap = new Map<number, BankingMovement>();
+    this.movements.forEach((item) => {
+      if (movementsMap.has(item.id)) {
+        warnings.push(new MovementDuplicationWarning(item));
+      } else {
+        movementsMap.set(item.id, item);
+      }
+    });
+    this.movements = Object.values(movementsMap);
+    return warnings;
+  }
+
   // Method to validate banking synchronization by using control points
-  validate(balances: BankingBalance[]): any {
+  validate(balances: BankingBalance[]): BankingSynchronizationWarning[] {
     const checkedBalances = this.checkBalances(balances);
-    throw new Error('NotImplemented');
+    let warnings = new Array<BankingSynchronizationWarning>();
+    warnings = warnings.concat(this.checkDuplicatedMovements());
+    return warnings;
   }
 }
 
