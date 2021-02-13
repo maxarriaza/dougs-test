@@ -1,0 +1,9 @@
+# Exclude IDE folders
+.idea/
+
+# Exclude node modules folder
+node_modules/
+
+# Exclude dist folder
+dist/
+
