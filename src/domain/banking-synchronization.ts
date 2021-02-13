@@ -12,6 +12,28 @@ export class BankingSynchronization {
     this.movements = props.movements;
   }
 
-  // Method to validate banking synchronization by using balances
-  validate(balances: BankingBalance[]): any {}
+  // Method to clean and check balances
+  private checkBalances(balances: BankingBalance[]): BankingBalance[] {
+    const balanceMap = new Map<string, BankingBalance>();
+    balances.forEach((item) => balanceMap.set(item.id, item));
+    if (balanceMap.size < 2) {
+      throw new BankingSynchronizationValidationError(
+        'Not enough bank balances.',
+      );
+    }
+    return Object.values(balanceMap);
+  }
+
+  // Method to validate banking synchronization by using control points
+  validate(balances: BankingBalance[]): any {
+    const checkedBalances = this.checkBalances(balances);
+    throw new Error('NotImplemented');
+  }
+}
+
+export class BankingSynchronizationValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'BankingSynchronizationValidationError';
+  }
 }
