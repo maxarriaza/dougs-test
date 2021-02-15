@@ -18,6 +18,9 @@ Start the application by running following command in terminal:
 $ npm run start
 ```
 
+Swagger UI available at : [http://localhost:3000/api](http://localhost:3000/api)
+
+
 ## Test
 
 Start unit by running following command in terminal: 
