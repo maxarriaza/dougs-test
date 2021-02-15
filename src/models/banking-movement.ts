@@ -17,4 +17,8 @@ export class BankingMovement {
     this.label = props.label;
     this.amount = props.amount;
   }
+
+  get time() {
+    return this.date.getTime();
+  }
 }

@@ -19,4 +19,8 @@ export class BankingBalance {
   get id(): string {
     return this.date.toUTCString();
   }
+
+  get time(): number {
+    return this.date.getTime();
+  }
 }
