@@ -1,7 +1,5 @@
 # Dougs test
 
-## Description
-
 ## Requirements
 
 NodeJS version : 12.18
@@ -13,28 +11,21 @@ NPM version : 6.14.6
 $ npm install
 ```
 
-## Running the app
+## Quick start
 
+Start the application by running following command in terminal: 
 ```bash
-# development
 $ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
 
+Start unit by running following command in terminal: 
 ```bash
-# unit tests
 $ npm run test
+```
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
+To enable coverage report :
+```bash
 $ npm run test:cov
 ```

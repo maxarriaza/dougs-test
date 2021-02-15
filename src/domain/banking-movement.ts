@@ -1,4 +1,4 @@
-interface BankingMovementProps {
+export interface BankingMovementProps {
   id: number;
   date: Date;
   label: string;

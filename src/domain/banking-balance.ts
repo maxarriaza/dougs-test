@@ -1,4 +1,4 @@
-interface BankingBalanceProps {
+export interface BankingBalanceProps {
   date: Date;
   balance: number;
 }

@@ -1,4 +1,4 @@
-import { BankingMovement } from './banking-movement';
+import { BankingMovement, BankingMovementProps } from './banking-movement';
 import { BankingBalance } from './banking-balance';
 import {
   BankingSynchronizationWarning,
@@ -6,7 +6,7 @@ import {
   MovementMissingWarning,
 } from './banking-synchronization-warning';
 
-interface BankingSynchronizationProps {
+export interface BankingSynchronizationProps {
   movements: BankingMovement[];
 }
 
@@ -27,16 +27,17 @@ export class BankingSynchronization {
     const orderedBalances = Array.from(balanceMap.values());
     orderedBalances.sort((itemA, itemB) => itemA.time - itemB.time);
     if (orderedBalances.length < 2) {
-      throw new Error('Not enough bank balances.');
+      throw new Error('At least two balances required to process validation');
     }
     Array.from(this.movementMap.values()).forEach((item) => {
       const firstBalance = orderedBalances[0];
       const lastBalance = orderedBalances[orderedBalances.length - 1];
-      const isMissingBalance = (item.time <= firstBalance.time || item.time > lastBalance.time);
+      const isMissingBalance =
+        item.time <= firstBalance.time || item.time > lastBalance.time;
       if (isMissingBalance) {
-        throw new Error('Missing balances to validate movements');
+        throw new Error('Balances missing to process validation');
       }
-    })
+    });
     return orderedBalances;
   }
 
@@ -47,7 +48,12 @@ export class BankingSynchronization {
     this.movementsIds.forEach((item) => {
       if (unicitySet.has(item)) {
         const movement = this.movementMap.get(item);
-        warnings.push(new MovementDuplicationWarning({ movement }));
+        warnings.push(
+          new MovementDuplicationWarning({
+            movementId: movement.id,
+            movementLabel: movement.label,
+          }),
+        );
       } else {
         unicitySet.add(item);
       }

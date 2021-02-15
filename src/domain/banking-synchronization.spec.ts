@@ -52,7 +52,12 @@ describe('BankingSynchronization', () => {
         balance: 10,
       });
       const warnings = synchronization.validate([start_balance, end_balance]);
-      expect(warnings).toContainEqual(new MovementDuplicationWarning({ movement }));
+      expect(warnings).toContainEqual(
+        new MovementDuplicationWarning({
+          movementId: movement.id,
+          movementLabel: movement.label,
+        }),
+      );
     });
 
     test('with missing movements having positive amount on single period should return missing movement warning', () => {
